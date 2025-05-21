@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fixes.css') }}">
     
     <!-- Plotly for charts -->
-    <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
-
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <!-- Interactive Galaxy Background Canvas -->
@@ -210,61 +209,11 @@
     {% if price_chart %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Parse price chart data
-                var priceChartData = {{ price_chart|safe }};
-                
-                // Check if price chart data has the required structure
-                if (!priceChartData || !priceChartData.data || !priceChartData.layout) {
-                    throw new Error('Invalid price chart data structure');
-                }
-                
-                // Enhanced configuration for better interactive experience
-                var config = {
-                    responsive: true,
-                    displayModeBar: true,  // Show the mode bar for more options
-                    displaylogo: false,    // Hide Plotly logo
-                    scrollZoom: true,      // Allow scroll to zoom
-                    modeBarButtonsToAdd: [
-                        'zoomIn2d',        // Add zoom in button
-                        'zoomOut2d',       // Add zoom out button
-                        'resetScale2d'      // Add reset button
-                    ],
-                    modeBarButtonsToRemove: [
-                        'lasso2d',         // Remove less useful buttons to reduce clutter
-                        'select2d'
-                    ]
-                };
-                
-                // Create the plot with cosmic styling
-                Plotly.newPlot('price-chart', priceChartData.data, priceChartData.layout, config);
-                
-                // Add resize handler for responsive behavior
-                window.addEventListener('resize', function() {
-                    Plotly.Plots.resize(document.getElementById('price-chart'));
-                });
-            } catch (error) {
-                console.error('Error rendering price chart:', error);
-                document.getElementById('price-chart').innerHTML = 
-                    '<div class="chart-error">' +
-                    '<div class="error-icon"></div>' +
-                    '<p>Failed to load price history chart: ' + error.message + '</p>' +
-                    '</div>';
-            }
-        });
-    </script>
-    {% else %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('price-chart').innerHTML = 
-                '<div class="chart-error">' +
-                '<div class="error-icon"></div>' +
-                '<p>No price history data available</p>' +
-                '</div>';
+            // Load price chart
+            var priceChartData = {{ price_chart|safe }};
+            Plotly.newPlot('price-chart', priceChartData.data, priceChartData.layout);
         });
     </script>
     {% endif %}
-
-
 </body>
 </html>
